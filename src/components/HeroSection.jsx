@@ -2,14 +2,14 @@ import React from "react";
 
 export default function HeroSection() {
   return (
-    <div className="lg:col-span-5 flex flex-col items-start text-left space-y-5 max-w-[700px] mx-auto lg:mx-0 mt-16">
+    <div className="lg:col-span-5 flex flex-col items-start text-left space-y-5 max-w-[700px] mx-auto lg:mx-0 mt-8 lg:mt-16">
       {" "}
       {/* Logo */}
       <div>
         <img
           src="/xlchess.png"
           alt="XLCHESS Logo"
-          className="h-40 w-auto object-contain"
+          className="h-24 sm:h-32 md:h-40 w-auto object-contain"
           onError={(e) => {
             e.target.style.display = "none";
           }}
@@ -18,7 +18,15 @@ export default function HeroSection() {
       {/* Headlines */}
       <div className="space-y-7 pt-1 w-full max-w-[720px]">
         <h1
-          className="text-[56px] font-black leading-[1.02] tracking-[-0.01em]"
+          className="
+    text-[42px]
+    sm:text-[48px]
+    md:text-[56px]
+    lg:text-[64px]
+    font-black
+    leading-[1.02]
+    tracking-[-0.01em]
+  "
           style={{ fontFamily: "Inter, sans-serif" }}
         >
           <span className="whitespace-nowrap">Build the Future of</span>
@@ -29,53 +37,30 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <p className="text-gray-300 text-lg sm:text-xl font-bold tracking-wide">
-          <span className="whitespace-nowrap">
-            Making the Best Move on the Way to the Top
-          </span>
+        <p className="text-gray-300 text-lg sm:text-xl font-bold tracking-wide leading-snug">
+          Making the Best Move on the Way to the Top
         </p>
 
         <p className="text-gray-500 text-sm sm:text-base leading-relaxed">
-          <span className="whitespace-nowrap">
+          <span className="hidden md:inline whitespace-nowrap">
             A complete chess platform to play, learn, compete, and grow—built
           </span>
-          <br />
+          <span className="md:hidden">
+            A complete chess platform to play, learn, compete, and grow—built
+          </span>
+          <br className="hidden md:block" />
           to become the world's #1 destination for chess.
         </p>
       </div>
       {/* Play Button */}
-      <button
-        className="
-          flex items-center gap-2
-          bg-transparent
-          border border-white/20
-          hover:border-white/40
-          hover:bg-white/5
-          active:scale-[0.98]
-          transition-all duration-200
-          px-4 py-1
-          rounded-full
-          font-semibold
-          tracking-wide
-          text-white
-          text-base
-          relative
-          overflow-hidden
-          group
-        "
-      >
-        <span className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/5 to-white/0" />
-
+      <button className="flex items-center gap-3 px-7 py-3 rounded-2xl bg-gradient-to-r from-[#5b5fff] to-[#787cff] text-white font-semibold shadow-[0_10px_30px_rgba(91,95,255,0.35)] hover:translate-y-[-2px] hover:shadow-[0_15px_35px_rgba(91,95,255,0.5)] transition-all duration-300">
         <img
           src="/play-icon.png"
-          alt=""
-          className="w-12 h-12 object-contain relative z-10"
-          onError={(e) => {
-            e.target.style.display = "none";
-          }}
+          alt="Play"
+          className="w-7 h-7 object-contain scale-[1.6]"
         />
 
-        <span className="relative z-10">Play</span>
+        <span className="tracking-wide">Play</span>
       </button>
     </div>
   );
