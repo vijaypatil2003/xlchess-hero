@@ -32,7 +32,7 @@ export default function Navbar() {
                     onClick={() => setActiveTab(link)}
                     className={`text-sm font-semibold transition-all duration-300 ${
                       activeTab === link
-                        ? "text-[#FFD700] drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]"
+                        ? "text-[#6B7FE3] drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]"
                         : "text-gray-300 hover:text-white"
                     }`}
                   >
@@ -100,7 +100,7 @@ export default function Navbar() {
                   }}
                   className={`text-sm font-medium transition-colors ${
                     activeTab === link
-                      ? "text-[#FFD700]"
+                      ? "text-[#6B7FE3]"
                       : "text-gray-300 hover:text-white"
                   }`}
                 >
