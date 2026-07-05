@@ -104,20 +104,25 @@ export default function App() {
   }, [moveIndex, gameOver]);
 
   return (
-    <div className="relative min-h-screen w-full bg-[#060b1e] bg-gradient-to-br from-[#080d26] via-[#050a1c] to-[#020512] font-sans text-white overflow-hidden flex items-center justify-center p-4 sm:p-6 md:p-12">
-      {/* <Navbar /> */}
+    <div className="relative min-h-screen w-full bg-[#060b1e] bg-gradient-to-br from-[#080d26] via-[#050a1c] to-[#020512] font-sans text-white overflow-hidden">
+      <Navbar />
       <BackgroundWatermarks />
 
-      <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-        <HeroSection />
-        <ChessDashboard
-          fenString={fen}
-          movesRemaining={Math.max(0, EVERGREEN_MOVES.length - moveIndex)}
-          gameOver={gameOver}
-          currentTurn={moveIndex % 2 === 0 ? "White" : "Black"}
-          onReset={startGame}
-          onReplay={startGame}
-        />
+      <div className="relative z-10 w-full max-w-7xl mx-auto pt-8 px-4 sm:px-6 md:px-12 min-h-screen flex items-center">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <HeroSection />
+
+          <div className="lg:col-span-7 pt-12">
+            <ChessDashboard
+              fenString={fen}
+              movesRemaining={Math.max(0, EVERGREEN_MOVES.length - moveIndex)}
+              gameOver={gameOver}
+              currentTurn={moveIndex % 2 === 0 ? "White" : "Black"}
+              onReset={startGame}
+              onReplay={startGame}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
