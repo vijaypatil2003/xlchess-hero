@@ -43,7 +43,7 @@ export default function Navbar() {
             </ul>
           </div>
 
-          {/* Right: Login / Signup Capsule */}
+          {/*   Login / Signup  */}
           <div className="hidden md:flex items-center rounded-full p-1 bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
             <button className="px-2 py-1 text-sm font-semibold text-gray-300 hover:text-white transition-all duration-200">
               Log In
