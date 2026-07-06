@@ -3,7 +3,8 @@
 > **Approach chosen: Option 2 — Improve**  
 > Thoughtful improvements to the existing [XLChess](https://xlchess.com) hero section, demonstrating engineering judgment, UI/UX polish, and production-quality code.
 
-**Live Demo:** [https://xlchess-hero.vercel.app](https://xlchess-hero.vercel.app)  
+**Live Demo:** [https://xlchess-hero.vercel.app](https://xlchess-hero.vercel.app)
+
 **GitHub:** [https://github.com/vijaypatil2003/xlchess-hero](https://github.com/vijaypatil2003/xlchess-hero)
 
 ---
@@ -22,7 +23,7 @@ The original hero section had several gaps — no navigation, a disconnected che
 
 | Area               | Original                                                        | My Version                                                                                           | Why                                                                                |
 | ------------------ | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| Navigation         | No navbar at all                                                | Fixed navbar — logo, nav links, Log In / Sign Up, scroll effect, mobile hamburger                    | Every production site has a navbar — its absence made the original feel unfinished |
+| Navigation         | No navbar at all                                                | Fixed navbar — logo, nav links, Log In / Sign Up, active navigation states, mobile hamburger         | Every production site has a navbar — its absence made the original feel unfinished |
 | Chess Board        | Mid-game static position, pieces disappear/appear between moves | Full Evergreen Game autoplay from move 1 — pieces slide smoothly between squares every 1.5s          | Smooth animation makes the board feel alive, not like a screenshot                 |
 | Game End State     | No end state — board just sits there                            | Checkmate overlay on board — blurred board, "Checkmate! White wins 🏆" with Reset and Replay buttons | Real chess apps always show a game-over state — absence of this felt incomplete    |
 | Autoplay Indicator | "Autoplay in Progress..." text only                             | Animated green pulse dot + "Autoplay in Progress..." — disappears when game ends                     | Visual feedback shows the system is active, not frozen                             |
@@ -62,11 +63,10 @@ npm run preview
 | ---------------- | ------- | ------------------------------------------------------------------ |
 | React            | 19      | Component model, declarative UI, state management                  |
 | Vite             | 7       | Fastest dev experience, instant HMR, optimised production builds   |
-| Tailwind CSS     | 3       | Consistent design system without class naming overhead             |
+| Tailwind CSS     | 4       | Utility-first CSS framework with zero-runtime styling              |
 | react-chessboard | 4       | Smooth piece sliding animations — v5 broke this API                |
 | chess.js         | 1       | Move validation, FEN generation, checkmate detection               |
 | Space Grotesk    | —       | Modern geometric font, loaded via Google Fonts with `display=swap` |
-| clsx             | —       | Clean conditional className utility                                |
 
 ---
 
@@ -79,6 +79,7 @@ src/
 │   │   └── Navbar.jsx          → Fixed navbar, scroll effect, mobile menu
 │   ├── HeroSection.jsx         → Left side: logo, headline, CTA button
 │   ├── ChessDashboard.jsx      → Right side: animated chess game
+|   ├── EvergreenGame.jsx       → Evergreen Game autoplay state and logic
 │   └── BackgroundWatermarks.jsx → Floating chess pieces across viewport
 |
 ├── App.jsx                     → Chess game state and autoplay logic
@@ -93,14 +94,14 @@ public/
 
 ## Key Engineering Decisions
 
-**Chess game state lives in App.jsx, not ChessDashboard:**  
-`ChessDashboard` is a pure presentational component — it receives FEN, move count, game over state as props and renders them. All game logic (move execution, checkmate detection, reset) lives in `App.jsx`. Clean separation of concerns — easier to test, easier to reason about.
+**Chess game state lives in EvergreenGame.jsx, not ChessDashboard:**  
+`ChessDashboard` is a pure presentational component — it receives FEN, move count, game over state as props and renders them. All game logic (move execution, checkmate detection, reset) lives in `EvergreenGame.jsx`. Clean separation of concerns — easier to test, easier to reason about.
 
 **react-chessboard v4 over v5:**  
 v5 changed the animation API. Pieces no longer slide smoothly between squares — they teleport. v4 gives the exact smooth piece movement needed. Pinning to v4 is a deliberate, documented decision, not an accident.
 
 **No animation library (Framer Motion / GSAP):**  
-Every animation in this project — floating pieces, typewriter headline, navbar scroll transition, button hover effects — is built with CSS keyframes or `requestAnimationFrame`. Zero additional bundle weight. Framer Motion alone adds ~60KB to the bundle for animations achievable in pure CSS.
+Every animation in this project — floating pieces, typewriter headline, navbar active states and hover transitions, button hover effects — is built with CSS keyframes or `requestAnimationFrame`. Zero additional bundle weight. Framer Motion alone adds ~60KB to the bundle for animations achievable in pure CSS.
 
 **requestAnimationFrame for background pieces:**  
 CSS keyframes animate along a fixed, predictable path. Using `rAF` lets each piece calculate its own velocity and direction, bouncing across the full viewport continuously — far more dynamic and visually interesting than the original's static ghost pieces.
@@ -124,7 +125,6 @@ CSS keyframes animate along a fixed, predictable path. Using `rAF` lets each pie
 | No animation library                    | Lean bundle, zero extra dependencies   | Less expressive animations than Framer Motion   |
 | react-chessboard v4                     | Smooth piece sliding                   | Pinned to older version, manual upgrades needed |
 | Autoplay only chess board               | Simple, reliable, no engine dependency | No user interactivity on the board              |
-| Board hidden on smallest mobile screens | Clean readable layout on small devices | Feature parity sacrificed below 640px           |
 
 ---
 
