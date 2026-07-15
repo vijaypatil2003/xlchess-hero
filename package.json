@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "chess.js": "^1.4.0",
+    "framer-motion": "^12.42.2",
     "lucide-react": "^1.23.0",
     "react": "^19.2.7",
-    "react-chessboard": "^4.0.0",
+    "react-chessboard": "^4.7.3",
     "react-dom": "^19.2.7"
   },
   "devDependencies": {
