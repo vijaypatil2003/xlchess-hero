@@ -15,6 +15,7 @@ import {
 
 // Luxury Decorative Asset
 import heroKingImg from "../assets/hero-king.png";
+
 import HeroLeft from "./HeroSection";
 
 export default function EvergreenGame() {
