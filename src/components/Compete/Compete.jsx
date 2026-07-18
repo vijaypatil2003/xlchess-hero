@@ -1,485 +1,317 @@
 import React, { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Swords,
   Trophy,
+  Share2,
+  Swords,
+  Calendar,
   Users,
+  Target,
   Zap,
-  Clock,
-  ArrowRight,
-  Crown,
+  Flame,
+  CheckCircle2,
+  Instagram,
+  Twitter,
 } from "lucide-react";
 
-const OPEN_CHALLENGES = [
+// Mock Data for Luxury Battle Arenas
+const TOURNAMENTS = [
   {
-    id: 1,
-    player: "Magnus_Ghost",
-    rating: 2450,
-    timeControl: "3 + 2",
-    mode: "Blitz",
-    variant: "Rated",
+    id: "t1",
+    title: "Battle of 64 Grand Championship",
+    status: "ongoing",
+    prize: "₹64,000",
+    firstPrize: "₹15,000",
+    time: "Live Now • Ends 9:30 PM",
+    players: "48 / 64 Registered",
+    type: "Blitz Knockout",
   },
   {
-    id: 2,
-    player: "Vishy_Fan_99",
-    rating: 1980,
-    timeControl: "10 + 0",
-    mode: "Rapid",
-    variant: "Rated",
+    id: "t2",
+    title: "Vanguard Elite Invitational",
+    status: "ongoing",
+    prize: "₹25,000",
+    firstPrize: "₹8,000",
+    time: "Live Now • Round 3/5",
+    players: "16 Masters Active",
+    type: "Classical",
   },
   {
-    id: 3,
-    player: "Hikaru_Speedrun",
-    rating: 2810,
-    timeControl: "1 + 0",
-    mode: "Bullet",
-    variant: "Casual",
-  },
-  {
-    id: 4,
-    player: "Kasparov_AI",
-    rating: 2200,
-    timeControl: "5 + 3",
-    mode: "Blitz",
-    variant: "Rated",
+    id: "t3",
+    title: "Paladin Stardust Open",
+    status: "upcoming",
+    prize: "₹40,000",
+    firstPrize: "₹12,000",
+    time: "Tomorrow • 7:30 PM IST",
+    players: "112 Registered",
+    type: "Bullet Arena",
   },
 ];
 
-// Luxury Grandmaster Standings Data
-const LEADERBOARD = [
-  {
-    rank: 1,
-    name: "Alireza_Pro",
-    rating: 2895,
-    winRate: "68.4%",
-    color: "text-[#d4af37]",
-  }, // Gold
-  {
-    rank: 2,
-    name: "Gukesh_Domination",
-    rating: 2845,
-    winRate: "64.2%",
-    color: "text-neutral-400",
-  }, // Silver
-  {
-    rank: 3,
-    name: "Pragg_Chess",
-    rating: 2815,
-    winRate: "61.9%",
-    color: "text-[#cd7f32]",
-  }, // Bronze
-  {
-    rank: 4,
-    name: "Nakamura_Fan",
-    rating: 2790,
-    winRate: "59.5%",
-    color: "text-neutral-500",
-  },
-];
+// Mock Performance Metrics matching your theme
+const USER_PERFORMANCE = {
+  rank: "Platinum Grandmaster",
+  level: "Lvl 12",
+  gamesPlayed: "1,284",
+  winRate: "68%",
+  accuracy: "91%",
+  streak: "7 Wins",
+  badgeWon: "Golden Citadel Crest", // Could be golden, silver, brass
+  badgeIcon: "♛",
+  badgeColor: "from-[#d4af37] via-[#ebd391] to-[#b8860b]",
+};
 
 export default function Compete() {
-  const [inQueue, setInQueue] = useState(false);
-  const [selectedQueue, setSelectedQueue] = useState(null);
+  const [copied, setCopied] = useState(false);
 
-  const startQueue = (queueName) => {
-    setInQueue(true);
-    setSelectedQueue(queueName);
-    setTimeout(() => {
-      setInQueue(false);
-      setSelectedQueue(null);
-      alert("Match found! Entering Arena...");
-    }, 4000);
+  const handleShare = () => {
+    setCopied(true);
+    navigator.clipboard.writeText(
+      "Check out my XL Chess Wrapped performance status! Join the arena at xlchess.com",
+    );
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="relative z-10 w-full min-h-screen text-white py-6 flex flex-col gap-16">
+    <div className="relative z-10 w-full h-fit text-white py-6 flex flex-col gap-12">
       {/* Editorial Header Section */}
       <div className="max-w-xl">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[10px] text-[#ebd391] tracking-widest uppercase font-medium mb-4">
           <Trophy className="w-3.5 h-3.5 text-[#d4af37]" />
-          <span>Lounge Arena</span>
+          <span>Championship Arena</span>
         </div>
         <h1 className="font-light text-4xl sm:text-5xl tracking-tight text-neutral-200 leading-tight mb-4">
           Claim Your{" "}
           <span className="font-serif italic text-[#ebd391]">Dominance.</span>
         </h1>
         <p className="text-neutral-400 text-sm font-light leading-relaxed tracking-wide">
-          Step into high-stakes environments designed for pure tactical
-          expression. Join rapid queues or accept premium targeted open wagers.
+          Engage in calculated systemic warfare, win prestigious metal crests,
+          and broadcast your tactical supremacy to the factions.
         </p>
       </div>
 
-      {/* Grid Layout: Quick Actions & Live Open Challenges */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* LEFT COLUMN: Quick Queue Cards */}
-        <div className="lg:col-span-4 flex flex-col gap-4">
-          <h2 className="text-xs uppercase tracking-widest text-[#ebd391] font-semibold mb-2 flex items-center gap-2">
-            <Zap className="w-4 h-4" /> Quick Pairings
+      {/* Main Structural Twin Layout Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        {/* LEFT PANEL: BATTLE SCROLL (Tournaments Stack) */}
+        <div className="lg:col-span-7 flex flex-col gap-5">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-mono font-semibold flex items-center gap-2 mb-2">
+            <Swords className="w-4 h-4 text-[#ebd391]" /> Active Battle Fronts
           </h2>
 
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-5 bg-neutral-950/30 rounded-[22px] border border-white/5 flex items-center justify-between group cursor-pointer"
-            onClick={() => !inQueue && startQueue("Super Blitz Arena")}
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-purple-950/40 border border-[#a78bfa]/20 text-[#a78bfa]">
-                <Clock className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-medium text-sm text-neutral-200 group-hover:text-[#ebd391] transition-colors">
-                  Super Blitz
-                </h4>
-                <p className="text-[11px] text-neutral-500">
-                  3 min • Rated match
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
-          </motion.div>
-
-          <motion.div
-            whileHover={{ y: -4 }}
-            className="p-5 bg-neutral-950/30 rounded-[22px] border border-white/5 flex items-center justify-between group cursor-pointer"
-            onClick={() => !inQueue && startQueue("Classical Rapid Arena")}
-          >
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-indigo-950/40 border border-[#6366f1]/20 text-[#6366f1]">
-                <Users className="w-5 h-5" />
-              </div>
-              <div>
-                <h4 className="font-medium text-sm text-neutral-200 group-hover:text-[#ebd391] transition-colors">
-                  Classical Rapid
-                </h4>
-                <p className="text-[11px] text-neutral-500">
-                  10 min • Rated match
-                </p>
-              </div>
-            </div>
-            <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
-          </motion.div>
-
-          {inQueue && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-4 rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/5 text-center flex flex-col items-center justify-center gap-2 mt-2"
+          {TOURNAMENTS.map((tourney) => (
+            <div
+              key={tourney.id}
+              className={`relative group overflow-hidden bg-neutral-950/30 p-5 rounded-[22px] border backdrop-blur-xl flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 transition-all duration-300 hover:border-[#d4af37]/30 ${
+                tourney.status === "ongoing"
+                  ? "border-white/5"
+                  : "border-white/5 opacity-80"
+              }`}
             >
-              <span className="w-4 h-4 rounded-full border-2 border-[#ebd391] border-t-transparent animate-spin" />
-              <p className="text-xs font-mono text-[#ebd391] tracking-wider uppercase">
-                Searching for grandmasters...
-              </p>
-            </motion.div>
-          )}
+              {/* Subtle status indicator bar */}
+              <div
+                className={`absolute top-0 bottom-0 left-0 w-1 ${
+                  tourney.status === "ongoing"
+                    ? "bg-gradient-to-b from-purple-500 to-indigo-600"
+                    : "bg-neutral-700"
+                }`}
+              />
+
+              <div className="flex flex-col gap-1.5 pl-2">
+                <div className="flex items-center gap-2.5">
+                  <span
+                    className={`text-[9px] px-2 py-0.5 rounded-full font-mono uppercase tracking-wider ${
+                      tourney.status === "ongoing"
+                        ? "bg-purple-950/50 border border-purple-500/30 text-purple-300 animate-pulse"
+                        : "bg-neutral-900 border border-neutral-800 text-neutral-400"
+                    }`}
+                  >
+                    {tourney.status}
+                  </span>
+                  <span className="text-[10px] text-neutral-500 font-mono">
+                    {tourney.type}
+                  </span>
+                </div>
+
+                <h3 className="text-base font-medium text-neutral-200 group-hover:text-[#ebd391] transition-colors duration-300">
+                  {tourney.title}
+                </h3>
+
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-neutral-400 font-light mt-1">
+                  <span className="flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-neutral-500" />{" "}
+                    {tourney.time}
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5 text-neutral-500" />{" "}
+                    {tourney.players}
+                  </span>
+                </div>
+              </div>
+
+              {/* Reward Information Box */}
+              <div className="sm:text-right flex flex-col items-start sm:items-end justify-center shrink-0 border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0 pl-2 sm:pl-0">
+                <span className="text-[9px] tracking-wider text-neutral-500 font-mono uppercase">
+                  Total Prize Pool
+                </span>
+                <span className="text-xl font-light font-serif text-[#ebd391]">
+                  {tourney.prize}
+                </span>
+                <span className="text-[10px] text-neutral-400 font-light">
+                  1st: {tourney.firstPrize}
+                </span>
+
+                <button className="mt-2.5 text-[10px] uppercase font-semibold tracking-widest text-[#ebd391] bg-white/5 border border-white/10 hover:border-[#ebd391]/40 px-3 py-1.5 rounded-full transition-all cursor-pointer">
+                  {tourney.status === "ongoing"
+                    ? "Enter Match"
+                    : "Register Now"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* RIGHT COLUMN: Live Table */}
-        <div className="lg:col-span-8 flex flex-col gap-4">
-          <h2 className="text-xs uppercase tracking-widest text-[#ebd391] font-semibold mb-2 flex items-center gap-2">
-            <Swords className="w-4 h-4" /> Live Open Challenges
+        {/* RIGHT PANEL: PREMIUM PRESTIGE CARD ENGINE (Shareable Card) */}
+        <div className="lg:col-span-5 flex flex-col gap-5">
+          <h2 className="text-xs uppercase tracking-widest text-neutral-400 font-mono font-semibold flex items-center justify-between mb-2">
+            <span>Prestige Snapshot</span>
+            <span className="text-[10px] lowercase text-neutral-500 font-normal italic">
+              click share to export
+            </span>
           </h2>
 
-          <div className="w-full overflow-hidden rounded-[22px] border border-white/5 bg-neutral-950/10 backdrop-blur-md">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs font-light tracking-wide border-collapse">
-                <thead>
-                  <tr className="border-b border-white/5 bg-white/[0.02] text-neutral-400 font-mono text-[10px] uppercase tracking-wider">
-                    <th className="p-4 pl-6">Grandmaster</th>
-                    <th className="p-4">Rating</th>
-                    <th className="p-4">Time Control</th>
-                    <th className="p-4">Variant</th>
-                    <th className="p-4 pr-6 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {OPEN_CHALLENGES.map((challenge) => (
-                    <tr
-                      key={challenge.id}
-                      className="hover:bg-white/[0.01] transition-colors duration-200"
-                    >
-                      <td className="p-4 pl-6 font-medium text-neutral-200 flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                        {challenge.player}
-                      </td>
-                      <td className="p-4 font-mono text-neutral-400">
-                        {challenge.rating}
-                      </td>
-                      <td className="p-4 text-neutral-300 font-medium">
-                        {challenge.timeControl} ({challenge.mode})
-                      </td>
-                      <td className="p-4">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase text-purple-400 bg-purple-950/30 border border-purple-500/10">
-                          {challenge.variant}
-                        </span>
-                      </td>
-                      <td className="p-4 pr-6 text-right">
-                        <button className="px-4 py-1.5 rounded-full bg-[#d4af37]/5 border border-[#d4af37]/30 hover:bg-[#d4af37]/10 text-[#ebd391] font-bold tracking-wider text-[10px] uppercase transition cursor-pointer">
-                          Accept
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* THE METALLIC CREDIT-CARD TYPE DISPLAYER */}
+          <div className="relative w-full aspect-[1.65/1] sm:h-64 sm:w-auto rounded-[24px] overflow-hidden bg-gradient-to-br from-[#120e24] via-[#0b0816] to-[#040308] border border-white/10 p-5 shadow-[0_30px_60px_rgba(0,0,0,0.8)] flex flex-col justify-between group">
+            {/* Dynamic Card Internal Grid Design Texture Layers */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:24px_24px]" />
+            <div className="absolute top-0 right-0 w-48 h-48 bg-purple-500/5 rounded-full blur-3xl pointer-events-none group-hover:bg-purple-500/10 transition-all duration-500" />
+
+            {/* Header Area */}
+            <div className="relative z-10 flex items-start justify-between">
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="/xlchess.png"
+                    alt="XLChess Logo"
+                    className="h-4.5 w-auto object-contain"
+                  />
+                  <span className="text-[9px] font-mono tracking-widest text-[#ebd391] uppercase opacity-70">
+                    Wrapped 2026
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-neutral-400 mt-1 uppercase tracking-wide">
+                  {USER_PERFORMANCE.rank}
+                </span>
+              </div>
+
+              {/* Golden Micro Chip / Antenna Iconography Simulation */}
+              <div className="w-9 h-7 rounded-md bg-gradient-to-br from-neutral-800 to-neutral-600 border border-white/10 opacity-30 flex items-center justify-center text-[10px] text-white">
+                )))
+              </div>
+            </div>
+
+            {/* Central Badge Achievement Grid Display (The Won Badge) */}
+            <div className="relative z-10 flex items-center gap-4 my-2">
+              <div
+                className={`w-14 h-14 rounded-full bg-gradient-to-br ${USER_PERFORMANCE.badgeColor} p-[1px] flex items-center justify-center shadow-[0_0_20px_rgba(212,175,55,0.15)]`}
+              >
+                <div className="w-full h-full rounded-full bg-[#0c0914] flex items-center justify-center text-2xl select-none">
+                  {USER_PERFORMANCE.badgeIcon}
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] text-neutral-500 font-mono tracking-wider uppercase">
+                  Unlocked Crest
+                </span>
+                <span className="text-base font-serif italic text-transparent bg-clip-text bg-gradient-to-r from-[#ebd391] to-[#b8860b] font-medium leading-tight">
+                  {USER_PERFORMANCE.badgeWon}
+                </span>
+                <span className="text-[9px] text-purple-400 font-mono uppercase tracking-widest mt-0.5">
+                  {USER_PERFORMANCE.level} Status
+                </span>
+              </div>
+            </div>
+
+            {/* Bottom Metrics Readout Grid */}
+            <div className="relative z-10 border-t border-white/5 pt-3 grid grid-cols-4 gap-2 text-center">
+              <div className="flex flex-col items-center">
+                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-wide">
+                  GAMES
+                </span>
+                <span className="text-xs font-semibold text-neutral-200 mt-0.5">
+                  {USER_PERFORMANCE.gamesPlayed}
+                </span>
+              </div>
+              <div className="flex flex-col items-center border-l border-white/5">
+                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-wide">
+                  WIN RATE
+                </span>
+                <span className="text-xs font-semibold text-[#ebd391] mt-0.5">
+                  {USER_PERFORMANCE.winRate}
+                </span>
+              </div>
+              <div className="flex flex-col items-center border-l border-white/5">
+                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-wide">
+                  ACCURACY
+                </span>
+                <span className="text-xs font-semibold text-neutral-200 mt-0.5">
+                  {USER_PERFORMANCE.accuracy}
+                </span>
+              </div>
+              <div className="flex flex-col items-center border-l border-white/5">
+                <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-wide">
+                  STREAK
+                </span>
+                <span className="text-xs font-semibold text-purple-400 mt-0.5 flex items-center gap-0.5">
+                  <Flame className="w-3 h-3 fill-purple-400/20" />{" "}
+                  {USER_PERFORMANCE.streak.split(" ")[0]}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* LOWER SECTION: Premium Top Standings Leaderboard */}
-      <div className="flex flex-col gap-4 mt-4">
-        <h2 className="text-xs uppercase tracking-widest text-[#ebd391] font-semibold mb-2 flex items-center gap-2">
-          <Crown className="w-4 h-4" /> Legendary Standings
-        </h2>
-
-        <div className="w-full overflow-hidden rounded-[22px] border border-white/5 bg-neutral-950/10 backdrop-blur-md">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-light tracking-wide border-collapse">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02] text-neutral-400 font-mono text-[10px] uppercase tracking-wider">
-                  <th className="p-4 pl-6 w-20">Rank</th>
-                  <th className="p-4">Grandmaster</th>
-                  <th className="p-4">Elo Rating</th>
-                  <th className="p-4 pr-6 text-right">Win Ratio</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/5">
-                {LEADERBOARD.map((user) => (
-                  <tr
-                    key={user.rank}
-                    className="hover:bg-white/[0.01] transition-colors duration-200"
+          {/* Action Trigger Row Box */}
+          <div className="flex flex-col sm:flex-row gap-3 mt-1">
+            <button
+              onClick={handleShare}
+              className="flex-1 py-3 px-4 rounded-full bg-gradient-to-r from-purple-900 to-indigo-950 text-[#ebd391] border border-[#d4af37]/30 hover:border-[#ebd391]/60 flex items-center justify-center gap-2 text-xs tracking-widest uppercase font-bold transition-all cursor-pointer shadow-lg"
+            >
+              <AnimatePresence mode="wait">
+                {copied ? (
+                  <motion.span
+                    key="copied"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-1.5 text-emerald-400"
                   >
-                    <td className="p-4 pl-6 font-mono font-bold">
-                      <span className={user.color}>
-                        {user.rank <= 3 ? `0${user.rank} ★` : `0${user.rank}`}
-                      </span>
-                    </td>
-                    <td className="p-4 font-medium text-neutral-200">
-                      {user.name}
-                    </td>
-                    <td className="p-4 font-mono text-[#ebd391] font-medium">
-                      {user.rating}
-                    </td>
-                    <td className="p-4 pr-6 font-mono text-neutral-400 text-right">
-                      {user.winRate}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Copied Card Info!
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="share"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-1.5"
+                  >
+                    <Share2 className="w-3.5 h-3.5" /> Share Performance Card
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
+
+            {/* Social Channels Aesthetic Links */}
+            <div className="flex gap-2 items-center justify-center px-2 bg-neutral-900/40 rounded-full border border-white/5">
+              <button className="p-2.5 rounded-full text-neutral-400 hover:text-white transition-colors cursor-pointer">
+                <Instagram className="w-4 h-4" />
+              </button>
+              <button className="p-2.5 rounded-full text-neutral-400 hover:text-white transition-colors cursor-pointer">
+                <Twitter className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-// import React, { useState } from "react";
-// import { motion } from "framer-motion";
-// import {
-//   Swords,
-//   Trophy,
-//   Users,
-//   Zap,
-//   Clock,
-//   ShieldAlert,
-//   ArrowRight,
-// } from "lucide-react";
-
-// // Mock Active Matchmaking Lobby Challenges
-// const OPEN_CHALLENGES = [
-//   {
-//     id: 1,
-//     player: "Magnus_Ghost",
-//     rating: 2450,
-//     timeControl: "3 + 2",
-//     mode: "Blitz",
-//     variant: "Rated",
-//   },
-//   {
-//     id: 2,
-//     player: "Vishy_Fan_99",
-//     rating: 1980,
-//     timeControl: "10 + 0",
-//     mode: "Rapid",
-//     variant: "Rated",
-//   },
-//   {
-//     id: 3,
-//     player: "Hikaru_Speedrun",
-//     rating: 2810,
-//     timeControl: "1 + 0",
-//     mode: "Bullet",
-//     variant: "Casual",
-//   },
-//   {
-//     id: 4,
-//     player: "Kasparov_AI",
-//     rating: 2200,
-//     timeControl: "5 + 3",
-//     mode: "Blitz",
-//     variant: "Rated",
-//   },
-// ];
-
-// export default function Compete() {
-//   const [inQueue, setInQueue] = useState(false);
-//   const [selectedQueue, setSelectedQueue] = useState(null);
-
-//   const startQueue = (queueName) => {
-//     setInQueue(true);
-//     setSelectedQueue(queueName);
-//     // Mimic real-time matchmaking delay
-//     setTimeout(() => {
-//       setInQueue(false);
-//       setSelectedQueue(null);
-//       alert("Match found! Entering Arena...");
-//     }, 4000);
-//   };
-
-//   return (
-//     <div className="relative z-10 w-full min-h-screen text-white py-6">
-//       {/* Editorial Header Section */}
-//       <div className="mb-12 max-w-xl">
-//         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#d4af37]/20 bg-[#d4af37]/5 text-[10px] text-[#ebd391] tracking-widest uppercase font-medium mb-4">
-//           <Trophy className="w-3.5 h-3.5 text-[#d4af37]" />
-//           <span>Lounge Arena</span>
-//         </div>
-//         <h1 className="font-light text-4xl sm:text-5xl tracking-tight text-neutral-200 leading-tight mb-4">
-//           Claim Your{" "}
-//           <span className="font-serif italic text-[#ebd391]">Dominance.</span>
-//         </h1>
-//         <p className="text-neutral-400 text-sm font-light leading-relaxed tracking-wide">
-//           Step into high-stakes environments designed for pure tactical
-//           expression. Join rapid queues or accept premium targeted open wagers.
-//         </p>
-//       </div>
-
-//       {/* Grid Layout: Left is Quick-Actions / Right is Live Table */}
-//       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-//         {/* LEFT COLUMN: Premium Quick Queue Cards */}
-//         <div className="lg:col-span-4 flex flex-col gap-4">
-//           <h2 className="text-xs uppercase tracking-widest text-[#ebd391] font-semibold mb-2 flex items-center gap-2">
-//             <Zap className="w-4 h-4" /> Quick Pairings
-//           </h2>
-
-//           {/* 3 min Blitz Card */}
-//           <motion.div
-//             whileHover={{ y: -4 }}
-//             className="p-5 bg-neutral-950/30 rounded-[22px] border border-white/5 flex items-center justify-between group cursor-pointer"
-//             onClick={() => !inQueue && startQueue("3 min Bullet Arena")}
-//           >
-//             <div className="flex items-center gap-4">
-//               <div className="p-3 rounded-xl bg-purple-950/40 border border-[#a78bfa]/20 text-[#a78bfa]">
-//                 <Clock className="w-5 h-5" />
-//               </div>
-//               <div>
-//                 <h4 className="font-medium text-sm text-neutral-200 group-hover:text-[#ebd391] transition-colors">
-//                   Super Blitz
-//                 </h4>
-//                 <p className="text-[11px] text-neutral-500">
-//                   3 min • Rated match
-//                 </p>
-//               </div>
-//             </div>
-//             <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
-//           </motion.div>
-
-//           {/* 10 min Rapid Card */}
-//           <motion.div
-//             whileHover={{ y: -4 }}
-//             className="p-5 bg-neutral-950/30 rounded-[22px] border border-white/5 flex items-center justify-between group cursor-pointer"
-//             onClick={() => !inQueue && startQueue("10 min Rapid Arena")}
-//           >
-//             <div className="flex items-center gap-4">
-//               <div className="p-3 rounded-xl bg-indigo-950/40 border border-[#6366f1]/20 text-[#6366f1]">
-//                 <Users className="w-5 h-5" />
-//               </div>
-//               <div>
-//                 <h4 className="font-medium text-sm text-neutral-200 group-hover:text-[#ebd391] transition-colors">
-//                   Classical Rapid
-//                 </h4>
-//                 <p className="text-[11px] text-neutral-500">
-//                   10 min • Rated match
-//                 </p>
-//               </div>
-//             </div>
-//             <ArrowRight className="w-4 h-4 text-neutral-500 group-hover:text-white group-hover:translate-x-1 transition-all" />
-//           </motion.div>
-
-//           {/* Live Queue Pulse State Display */}
-//           {inQueue && (
-//             <motion.div
-//               initial={{ opacity: 0, scale: 0.95 }}
-//               animate={{ opacity: 1, scale: 1 }}
-//               className="p-4 rounded-xl border border-[#d4af37]/20 bg-[#d4af37]/5 text-center flex flex-col items-center justify-center gap-2 mt-2"
-//             >
-//               <span className="w-4 h-4 rounded-full border-2 border-[#ebd391] border-t-transparent animate-spin" />
-//               <p className="text-xs font-mono text-[#ebd391] tracking-wider uppercase">
-//                 Searching for grandmasters in {selectedQueue}...
-//               </p>
-//             </motion.div>
-//           )}
-//         </div>
-
-//         {/* RIGHT COLUMN: Interactive Open Open Wagers Table */}
-//         <div className="lg:col-span-8 flex flex-col gap-4">
-//           <h2 className="text-xs uppercase tracking-widest text-[#ebd391] font-semibold mb-2 flex items-center gap-2">
-//             <Swords className="w-4 h-4" /> Live Open Challenges
-//           </h2>
-
-//           <div className="w-full overflow-hidden rounded-[22px] border border-white/5 bg-neutral-950/10 backdrop-blur-md">
-//             <div className="overflow-x-auto">
-//               <table className="w-full text-left text-xs font-light tracking-wide border-collapse">
-//                 <thead>
-//                   <tr className="border-b border-white/5 bg-white/[0.02] text-neutral-400 font-mono text-[10px] uppercase tracking-wider">
-//                     <th className="p-4 pl-6">Grandmaster</th>
-//                     <th className="p-4">Rating</th>
-//                     <th className="p-4">Time Control</th>
-//                     <th className="p-4">Variant</th>
-//                     <th className="p-4 pr-6 text-right">Action</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody className="divide-y divide-white/5">
-//                   {OPEN_CHALLENGES.map((challenge) => (
-//                     <tr
-//                       key={challenge.id}
-//                       className="hover:bg-white/[0.01] transition-colors duration-200"
-//                     >
-//                       <td className="p-4 pl-6 font-medium text-neutral-200 flex items-center gap-2">
-//                         <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
-//                         {challenge.player}
-//                       </td>
-//                       <td className="p-4 font-mono text-neutral-400">
-//                         {challenge.rating}
-//                       </td>
-//                       <td className="p-4 text-neutral-300 font-medium">
-//                         {challenge.timeControl} ({challenge.mode})
-//                       </td>
-//                       <td className="p-4">
-//                         <span
-//                           className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase ${
-//                             challenge.variant === "Rated"
-//                               ? "text-purple-400 bg-purple-950/30 border border-purple-500/10"
-//                               : "text-neutral-400 bg-neutral-800"
-//                           }`}
-//                         >
-//                           {challenge.variant}
-//                         </span>
-//                       </td>
-//                       <td className="p-4 pr-6 text-right">
-//                         <button className="px-4 py-1.5 rounded-full bg-[#d4af37]/5 border border-[#d4af37]/30 hover:bg-[#d4af37]/10 text-[#ebd391] font-bold tracking-wider text-[10px] uppercase transition cursor-pointer">
-//                           Accept
-//                         </button>
-//                       </td>
-//                     </tr>
-//                   ))}
-//                 </tbody>
-//               </table>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
