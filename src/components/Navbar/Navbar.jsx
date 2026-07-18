@@ -1,7 +1,7 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
-import logo from "../../assets/conpany-logo.png";
+import logo from "../../public/xlchess-logo.png";
 
 const NAV_LINKS = ["Hero", "Play", "Learn", "Compete", "Community"];
 

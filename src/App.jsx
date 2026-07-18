@@ -9,7 +9,7 @@ import Learn from "./components/Learn/Learn";
 import Compete from "./components/Compete/Compete";
 import Community from "./components/Community/Community";
 import Preloader from "./components/Preloader";
-
+// import Preloader from "./components/Preloader";
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Hero");
